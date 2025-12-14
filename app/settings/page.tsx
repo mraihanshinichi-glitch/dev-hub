@@ -22,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { ArrowLeft, Settings, Trash2, Download, Shield, Bell, Palette, Database, Clock, Keyboard, LogOut, Sun, Moon, Monitor } from 'lucide-react'
+import { ArrowLeft, Settings, Trash2, Download, Shield, Bell, Palette, Clock, Keyboard, LogOut, Sun, Moon, Monitor } from 'lucide-react'
 import { toast } from 'sonner'
 import Link from 'next/link'
 
@@ -53,7 +53,6 @@ export default function SettingsPage() {
   } = useSettingsStore()
   
   const [isDeleting, setIsDeleting] = useState(false)
-  const [isExporting, setIsExporting] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   
   const router = useRouter()
@@ -63,55 +62,7 @@ export default function SettingsPage() {
     return <div>Loading...</div>
   }
 
-  const handleExportData = async () => {
-    setIsExporting(true)
-    
-    try {
-      // Get all user data with simpler queries
-      const [projectsResult, featuresResult, releasesResult] = await Promise.all([
-        supabase.from('projects').select('*').eq('user_id', user?.id),
-        supabase.from('features').select('*, projects!inner(*)').eq('projects.user_id', user?.id),
-        supabase.from('releases').select('*, projects!inner(*)').eq('projects.user_id', user?.id)
-      ])
 
-      // Get notes separately to avoid complex joins
-      const notesResult = await supabase
-        .from('notes')
-        .select('*')
-        .in('project_id', (projectsResult.data || []).map(p => p.id))
-
-      const exportData = {
-        user: {
-          id: user?.id,
-          email: user?.email,
-          created_at: user?.created_at
-        },
-        projects: projectsResult.data || [],
-        notes: notesResult.data || [],
-        features: featuresResult.data || [],
-        releases: releasesResult.data || [],
-        exported_at: new Date().toISOString()
-      }
-
-      // Create and download JSON file
-      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `devhub-export-${new Date().toISOString().split('T')[0]}.json`
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
-      URL.revokeObjectURL(url)
-
-      toast.success('Data berhasil diekspor!')
-    } catch (error) {
-      toast.error('Gagal mengekspor data')
-      console.error(error)
-    } finally {
-      setIsExporting(false)
-    }
-  }
 
   const handleDeleteAccount = async () => {
     if (!confirm('Apakah Anda yakin ingin menghapus akun? Tindakan ini tidak dapat dibatalkan!')) {
@@ -485,35 +436,7 @@ export default function SettingsPage() {
           {/* Backup & Data Management */}
           <BackupSettings />
 
-          {/* Data Export */}
-          <Card className="app-card">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-app-text-primary">
-                <Database className="h-5 w-5" />
-                Export Data
-              </CardTitle>
-              <CardDescription>
-                Download data project untuk keperluan migrasi atau backup manual
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-medium text-app-text-primary">Ekspor Semua Data</h4>
-                  <p className="text-sm text-app-text-secondary">Download semua data project dalam format JSON</p>
-                </div>
-                <Button 
-                  onClick={handleExportData}
-                  disabled={isExporting}
-                  variant="outline"
-                  size="sm"
-                >
-                  <Download className="h-4 w-4 mr-2" />
-                  {isExporting ? 'Mengekspor...' : 'Ekspor'}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+
 
           {/* Danger Zone */}
           <Card className="bg-red-500/10 border-red-500/20">

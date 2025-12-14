@@ -39,13 +39,13 @@ File `vercel.json` sudah dibuat otomatis dengan konfigurasi optimal.
 ### 2.2 Environment Variables
 Siapkan environment variables berikut dari Supabase Dashboard:
 
-**Dari Supabase Dashboard → Settings → API:**
-- `NEXT_PUBLIC_SUPABASE_URL` - Project URL
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Public anon key
-- `SUPABASE_SERVICE_ROLE_KEY` - Service role key (secret)
+**WAJIB - Dari Supabase Dashboard → Settings → API:**
+- `NEXT_PUBLIC_SUPABASE_URL` - Project URL (contoh: https://abc123.supabase.co)
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Public anon key (eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...)
+- `SUPABASE_SERVICE_ROLE_KEY` - Service role key (secret) (eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...)
 
-**Optional (untuk analytics):**
-- `NEXT_PUBLIC_VERCEL_URL` - Auto-generated oleh Vercel
+**Optional:**
+- `NEXT_PUBLIC_APP_URL` - URL aplikasi Anda (https://your-app.vercel.app)
 
 ## Step 3: Deploy ke Vercel
 
@@ -69,12 +69,16 @@ Siapkan environment variables berikut dari Supabase Dashboard:
 
 4. **Environment Variables**
    - Klik "Environment Variables"
-   - Tambahkan semua variables dari Step 2.2
-   - Pastikan semua values benar
+   - Tambahkan 3 variables WAJIB:
+     * `NEXT_PUBLIC_SUPABASE_URL` = https://your-project.supabase.co
+     * `NEXT_PUBLIC_SUPABASE_ANON_KEY` = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+     * `SUPABASE_SERVICE_ROLE_KEY` = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+   - Pastikan tidak ada spasi di awal/akhir values
 
 5. **Deploy**
    - Klik "Deploy"
    - Tunggu proses build selesai (2-5 menit)
+   - Jika ada error, cek environment variables
 
 ### 3.2 Via Vercel CLI (Alternative)
 
