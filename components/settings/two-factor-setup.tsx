@@ -77,7 +77,7 @@ export function TwoFactorSetup() {
           <div className="space-y-3">
             <h4 className="font-medium text-app-text-primary">1. Scan QR Code</h4>
             <p className="text-sm text-app-text-secondary">
-              Gunakan aplikasi authenticator seperti Google Authenticator atau Authy
+              Gunakan aplikasi authenticator seperti Authy atau Microsoft Authenticator
             </p>
             <div className="flex justify-center">
               <div className="bg-white p-4 rounded-lg">

@@ -59,6 +59,10 @@ export default function SettingsPage() {
   const router = useRouter()
   const supabase = createClient()
 
+  if (!hydrated) {
+    return <div>Loading...</div>
+  }
+
   const handleExportData = async () => {
     setIsExporting(true)
     

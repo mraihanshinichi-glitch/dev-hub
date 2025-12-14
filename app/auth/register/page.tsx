@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
-import { Code2, Mail, Lock, User, Chrome } from 'lucide-react'
+import { Code2, Mail, Lock, User } from 'lucide-react'
 
 export default function RegisterPage() {
   const [fullName, setFullName] = useState('')
@@ -69,26 +69,7 @@ export default function RegisterPage() {
     }
   }
 
-  const handleGoogleRegister = async () => {
-    setIsLoading(true)
 
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/dashboard`
-        }
-      })
-
-      if (error) {
-        toast.error(error.message)
-        setIsLoading(false)
-      }
-    } catch (error) {
-      toast.error('Terjadi kesalahan saat mendaftar dengan Google')
-      setIsLoading(false)
-    }
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0f0f1a] via-[#12121e] to-[#0f0f1a] flex items-center justify-center p-4">
@@ -109,25 +90,7 @@ export default function RegisterPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Google Register */}
-            <Button
-              onClick={handleGoogleRegister}
-              disabled={isLoading}
-              variant="outline"
-              className="w-full"
-            >
-              <Chrome className="mr-2 h-4 w-4" />
-              Daftar dengan Google
-            </Button>
 
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-gray-700" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-gray-900 px-2 text-gray-400">Atau</span>
-              </div>
-            </div>
 
             {/* Email Register Form */}
             <form onSubmit={handleEmailRegister} className="space-y-4">

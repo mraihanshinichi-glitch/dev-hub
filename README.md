@@ -6,7 +6,6 @@ DevHub adalah platform manajemen project khusus untuk developer solo dan indie h
 
 ### 🔐 Autentikasi
 - Login dengan email & password
-- Login dengan Google OAuth
 - Sistem profil user dengan Supabase Auth
 
 ### 📦 Sistem Slot Project (Maksimal 5)
@@ -115,7 +114,6 @@ npm install
 3. **Setup Supabase**
 - Buat project baru di Supabase
 - Jalankan SQL schema dari `supabase/schema.sql`
-- Setup Google OAuth di Supabase Auth settings
 - Copy environment variables
 
 

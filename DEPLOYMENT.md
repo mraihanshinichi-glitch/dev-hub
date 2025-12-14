@@ -117,7 +117,6 @@ vercel --prod
 
 **Authentication → Providers:**
 - Pastikan Email provider enabled
-- Jika menggunakan Google OAuth, update redirect URLs
 
 ### 4.2 Database RLS Policies
 Pastikan semua RLS policies sudah aktif:

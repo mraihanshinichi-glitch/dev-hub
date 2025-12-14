@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/lib/store/auth-store'
+import { useHydrated } from '@/lib/hooks/use-hydrated'
 import { createClient } from '@/lib/supabase/client'
 import { DashboardHeader } from '@/components/dashboard/dashboard-header'
 import { Button } from '@/components/ui/button'
@@ -19,11 +20,16 @@ import { formatDate } from '@/lib/utils'
 import Link from 'next/link'
 
 export default function ProfilePage() {
+  const hydrated = useHydrated()
   const { user, profile, setProfile } = useAuthStore()
   const [isLoading, setIsLoading] = useState(false)
   const [fullName, setFullName] = useState(profile?.full_name || '')
   const router = useRouter()
   const supabase = createClient()
+
+  if (!hydrated) {
+    return <div>Loading...</div>
+  }
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault()

@@ -67,18 +67,7 @@ Jalankan schema dalam bagian-bagian terpisah:
 - Pastikan tabel berikut ada: profiles, projects, notes, features, releases, release_features, ai_messages
 - Buka Authentication → Policies, pastikan ada policies untuk semua tabel
 
-### 3.3 Setup Google OAuth (Opsional)
-1. Buka [Google Cloud Console](https://console.cloud.google.com)
-2. Buat project baru atau pilih existing
-3. Enable Google+ API
-4. Buat OAuth 2.0 credentials
-5. Tambahkan authorized redirect URIs:
-   - `https://your-project.supabase.co/auth/v1/callback`
-6. Copy Client ID dan Client Secret
-7. Di Supabase Dashboard → Authentication → Providers
-8. Enable Google provider dan masukkan credentials
-
-### 3.4 Get Supabase Keys
+### 3.3 Get Supabase Keys
 1. Buka Supabase Dashboard → Settings → API
 2. Copy "Project URL" dan "anon public" key
 
@@ -194,7 +183,6 @@ npm install --save-dev @types/node
 ### 9.1 Custom Domain
 - Setup custom domain di Vercel
 - Update NEXTAUTH_URL
-- Update Google OAuth redirect URIs
 
 ### 9.2 Analytics
 - Tambahkan Google Analytics
