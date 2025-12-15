@@ -207,7 +207,7 @@ export function NotesTab({ project }: NotesTabProps) {
             filteredNotes.map((note) => (
               <Card 
                 key={note.id} 
-                className={`app-card cursor-pointer transition-colors ${
+                className={`note-item app-card cursor-pointer transition-colors ${
                   selectedNote?.id === note.id ? 'ring-2 ring-primary' : ''
                 }`}
                 onClick={() => setSelectedNote(note)}

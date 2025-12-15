@@ -130,7 +130,7 @@ export function ReleaseCard({ release, isLast, onUpdate, onDelete }: ReleaseCard
 
         {/* Content */}
         <Card 
-          className={`flex-1 app-card hover:border-primary/30 transition-all duration-200 group cursor-pointer ${
+          className={`release-card flex-1 app-card hover:border-primary/30 transition-all duration-200 group cursor-pointer ${
             isUpdating ? 'opacity-75 scale-[0.99]' : ''
           } ${isFocused ? 'ring-2 ring-primary/50 border-primary/50' : ''}`}
           tabIndex={0}

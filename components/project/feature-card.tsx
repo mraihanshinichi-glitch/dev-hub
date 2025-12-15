@@ -87,7 +87,7 @@ export function FeatureCard({ feature, onUpdate, onDelete }: FeatureCardProps) {
 
   return (
     <>
-      <Card className="app-card hover:border-primary/30 transition-colors group">
+      <Card className="feature-card app-card hover:border-primary/30 transition-colors group">
         <CardContent className="p-4">
           <div className="flex items-start justify-between mb-3">
             <div className="flex-1 min-w-0">

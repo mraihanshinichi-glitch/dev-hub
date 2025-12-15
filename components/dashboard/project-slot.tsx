@@ -40,7 +40,7 @@ export function ProjectSlot({ project, onRefresh }: ProjectSlotProps) {
 
   return (
     <>
-      <Card className={`bg-white dark:bg-gray-900/50 border-slate-200 dark:border-gray-800 hover:border-primary/50 transition-colors group ${
+      <Card className={`project-slot bg-white dark:bg-gray-900/50 border-slate-200 dark:border-gray-800 hover:border-primary/50 transition-colors group ${
         isTemporary ? 'opacity-75' : 'cursor-pointer'
       }`}>
         <CardHeader className="pb-3">

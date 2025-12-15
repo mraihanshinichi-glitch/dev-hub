@@ -244,4 +244,118 @@
 .ProseMirror pre code {
   background: transparent;
   padding: 0;
+}/* Compa
+ct Mode Styles */
+.compact-mode {
+  /* Reduce padding and margins globally */
+  --compact-padding: 0.5rem;
+  --compact-margin: 0.25rem;
+  --compact-text-sm: 0.75rem;
+  --compact-text-base: 0.875rem;
+}
+
+.compact-mode .app-card {
+  @apply p-3;
+}
+
+.compact-mode .app-card .card-header {
+  @apply pb-2;
+}
+
+.compact-mode .app-card .card-content {
+  @apply p-3;
+}
+
+.compact-mode .app-card .card-title {
+  @apply text-base;
+}
+
+.compact-mode .app-card .card-description {
+  @apply text-xs;
+}
+
+/* Compact mode for buttons */
+.compact-mode .btn-compact {
+  @apply px-2 py-1 text-xs;
+}
+
+/* Compact mode for project slots */
+.compact-mode .project-slot {
+  @apply p-3;
+}
+
+.compact-mode .project-slot h3 {
+  @apply text-sm;
+}
+
+.compact-mode .project-slot p {
+  @apply text-xs;
+}
+
+/* Compact mode for dashboard header */
+.compact-mode .dashboard-header {
+  @apply py-3;
+}
+
+.compact-mode .dashboard-header h1 {
+  @apply text-xl;
+}
+
+/* Compact mode for feature cards */
+.compact-mode .feature-card {
+  @apply p-3;
+}
+
+.compact-mode .feature-card h4 {
+  @apply text-sm;
+}
+
+.compact-mode .feature-card p {
+  @apply text-xs;
+}
+
+/* Compact mode for release cards */
+.compact-mode .release-card {
+  @apply p-3;
+}
+
+.compact-mode .release-card h4 {
+  @apply text-sm;
+}
+
+/* Compact mode for notes */
+.compact-mode .note-item {
+  @apply p-2;
+}
+
+.compact-mode .note-item h3 {
+  @apply text-sm;
+}
+
+/* Compact mode for forms */
+.compact-mode .form-group {
+  @apply space-y-1;
+}
+
+.compact-mode .form-label {
+  @apply text-xs;
+}
+
+.compact-mode .form-input {
+  @apply py-1 px-2 text-sm;
+}
+
+/* Compact mode for navigation */
+.compact-mode .nav-item {
+  @apply px-2 py-1 text-sm;
+}
+
+/* Compact mode for tables */
+.compact-mode table {
+  @apply text-xs;
+}
+
+.compact-mode th,
+.compact-mode td {
+  @apply px-2 py-1;
 }

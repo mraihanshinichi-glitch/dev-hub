@@ -80,7 +80,6 @@ export const useSettingsStore = create<SettingsState>()(
     }),
     {
       name: 'devhub-settings',
-      skipHydration: true,
     }
   )
 )

@@ -1,10 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/lib/store/auth-store'
-import { useSettingsStore } from '@/lib/store/settings-store'
-import { useHydrated } from '@/lib/hooks/use-hydrated'
+import { useSettings } from '@/lib/hooks/use-settings'
 
 import { createClient } from '@/lib/supabase/client'
 import { DashboardHeader } from '@/components/dashboard/dashboard-header'
@@ -28,7 +27,12 @@ import Link from 'next/link'
 
 export default function SettingsPage() {
   const { user, logout } = useAuthStore()
-  const hydrated = useHydrated()
+  const [isHydrated, setIsHydrated] = useState(false)
+  
+  useEffect(() => {
+    setIsHydrated(true)
+  }, [])
+  
   const {
     emailNotifications,
     pushNotifications,
@@ -50,7 +54,7 @@ export default function SettingsPage() {
     setShowKeyboardShortcuts,
     setSessionTimeout,
     setTheme,
-  } = useSettingsStore()
+  } = useSettings()
   
   const [isDeleting, setIsDeleting] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
@@ -58,7 +62,7 @@ export default function SettingsPage() {
   const router = useRouter()
   const supabase = createClient()
 
-  if (!hydrated) {
+  if (!isHydrated) {
     return <div>Loading...</div>
   }
 
@@ -140,11 +144,7 @@ export default function SettingsPage() {
     return null
   }
 
-  if (!hydrated) {
-    return <div className="min-h-screen bg-slate-50 dark:bg-[#0f0f1a] flex items-center justify-center">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-    </div>
-  }
+
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#0f0f1a]">
@@ -297,13 +297,16 @@ export default function SettingsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <h4 className="font-medium text-app-text-primary">Compact Mode</h4>
-                  <p className="text-sm text-app-text-secondary">Tampilan yang lebih padat dan efisien</p>
+                  <p className="text-sm text-app-text-secondary">
+                    Mengurangi padding dan ukuran elemen untuk tampilan yang lebih padat
+                    {compactMode && <span className="text-primary ml-2">• Aktif</span>}
+                  </p>
                 </div>
                 <Switch 
                   checked={compactMode} 
                   onCheckedChange={(checked: boolean) => {
                     setCompactMode(checked)
-                    toast.success(checked ? 'Compact mode diaktifkan' : 'Compact mode dinonaktifkan')
+                    toast.success(checked ? 'Compact mode diaktifkan - UI akan lebih padat' : 'Compact mode dinonaktifkan - UI kembali normal')
                   }}
                 />
               </div>

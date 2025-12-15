@@ -53,7 +53,7 @@ export function DashboardHeader() {
   }
 
   return (
-    <header className="border-b border-slate-200 dark:border-gray-800 bg-white/80 dark:bg-[#12121e]/80 backdrop-blur-sm sticky top-0 z-50">
+    <header className="dashboard-header border-b border-slate-200 dark:border-gray-800 bg-white/80 dark:bg-[#12121e]/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link href="/dashboard" className="flex items-center space-x-2">
