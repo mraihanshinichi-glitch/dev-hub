@@ -60,19 +60,28 @@ export interface Database {
         Row: {
           id: string
           project_id: string
+          user_id: string
+          title: string
           content: any
+          created_at: string
           updated_at: string
         }
         Insert: {
           id?: string
           project_id: string
+          user_id: string
+          title?: string
           content?: any
+          created_at?: string
           updated_at?: string
         }
         Update: {
           id?: string
           project_id?: string
+          user_id?: string
+          title?: string
           content?: any
+          created_at?: string
           updated_at?: string
         }
       }

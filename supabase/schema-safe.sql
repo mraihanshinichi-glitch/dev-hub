@@ -31,7 +31,10 @@ CREATE TABLE IF NOT EXISTS projects (
 CREATE TABLE IF NOT EXISTS notes (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   project_id UUID REFERENCES projects(id) ON DELETE CASCADE NOT NULL,
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
+  title TEXT NOT NULL DEFAULT 'Untitled Note',
   content JSONB DEFAULT '{"type":"doc","content":[{"type":"paragraph"}]}',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -118,45 +121,9 @@ CREATE POLICY "Users can delete own projects" ON projects
   FOR DELETE USING (auth.uid() = user_id);
 
 -- RLS Policies for notes
-DROP POLICY IF EXISTS "Users can view own notes" ON notes;
-CREATE POLICY "Users can view own notes" ON notes
-  FOR SELECT USING (
-    EXISTS (
-      SELECT 1 FROM projects 
-      WHERE projects.id = notes.project_id 
-      AND projects.user_id = auth.uid()
-    )
-  );
-
-DROP POLICY IF EXISTS "Users can insert own notes" ON notes;
-CREATE POLICY "Users can insert own notes" ON notes
-  FOR INSERT WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM projects 
-      WHERE projects.id = notes.project_id 
-      AND projects.user_id = auth.uid()
-    )
-  );
-
-DROP POLICY IF EXISTS "Users can update own notes" ON notes;
-CREATE POLICY "Users can update own notes" ON notes
-  FOR UPDATE USING (
-    EXISTS (
-      SELECT 1 FROM projects 
-      WHERE projects.id = notes.project_id 
-      AND projects.user_id = auth.uid()
-    )
-  );
-
-DROP POLICY IF EXISTS "Users can delete own notes" ON notes;
-CREATE POLICY "Users can delete own notes" ON notes
-  FOR DELETE USING (
-    EXISTS (
-      SELECT 1 FROM projects 
-      WHERE projects.id = notes.project_id 
-      AND projects.user_id = auth.uid()
-    )
-  );
+DROP POLICY IF EXISTS "Users can manage own notes" ON notes;
+CREATE POLICY "Users can manage own notes" ON notes
+  FOR ALL USING (auth.uid() = user_id);
 
 -- RLS Policies for features
 DROP POLICY IF EXISTS "Users can view own features" ON features;
