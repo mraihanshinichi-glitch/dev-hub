@@ -15,10 +15,6 @@ export function useSettings() {
   if (!isHydrated) {
     return {
       ...settings,
-      emailNotifications: true,
-      pushNotifications: false,
-      releaseReminders: true,
-      featureDeadlineReminders: true,
       autoSaveEnabled: true,
       autoSaveInterval: 5,
       compactMode: false,

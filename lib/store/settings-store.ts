@@ -2,12 +2,6 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 interface SettingsState {
-  // Notification settings
-  emailNotifications: boolean
-  pushNotifications: boolean
-  releaseReminders: boolean
-  featureDeadlineReminders: boolean
-  
   // Auto-save settings
   autoSaveEnabled: boolean
   autoSaveInterval: number // in seconds
@@ -26,10 +20,6 @@ interface SettingsState {
   backupFrequency: 'daily' | 'weekly' | 'monthly'
   
   // Actions
-  setEmailNotifications: (enabled: boolean) => void
-  setPushNotifications: (enabled: boolean) => void
-  setReleaseReminders: (enabled: boolean) => void
-  setFeatureDeadlineReminders: (enabled: boolean) => void
   setAutoSaveEnabled: (enabled: boolean) => void
   setAutoSaveInterval: (interval: number) => void
   setCompactMode: (enabled: boolean) => void
@@ -43,10 +33,6 @@ interface SettingsState {
 }
 
 const defaultSettings = {
-  emailNotifications: true,
-  pushNotifications: false,
-  releaseReminders: true,
-  featureDeadlineReminders: true,
   autoSaveEnabled: true,
   autoSaveInterval: 5,
   compactMode: false,
@@ -63,10 +49,6 @@ export const useSettingsStore = create<SettingsState>()(
     (set) => ({
       ...defaultSettings,
       
-      setEmailNotifications: (emailNotifications) => set({ emailNotifications }),
-      setPushNotifications: (pushNotifications) => set({ pushNotifications }),
-      setReleaseReminders: (releaseReminders) => set({ releaseReminders }),
-      setFeatureDeadlineReminders: (featureDeadlineReminders) => set({ featureDeadlineReminders }),
       setAutoSaveEnabled: (autoSaveEnabled) => set({ autoSaveEnabled }),
       setAutoSaveInterval: (autoSaveInterval) => set({ autoSaveInterval }),
       setCompactMode: (compactMode) => set({ compactMode }),

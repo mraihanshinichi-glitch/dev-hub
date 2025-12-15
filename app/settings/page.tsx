@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { ArrowLeft, Settings, Trash2, Download, Shield, Bell, Palette, Clock, Keyboard, LogOut, Sun, Moon, Monitor } from 'lucide-react'
+import { ArrowLeft, Settings, Trash2, Download, Shield, Palette, Clock, Keyboard, LogOut, Sun, Moon, Monitor } from 'lucide-react'
 import { toast } from 'sonner'
 import Link from 'next/link'
 
@@ -34,20 +34,12 @@ export default function SettingsPage() {
   }, [])
   
   const {
-    emailNotifications,
-    pushNotifications,
-    releaseReminders,
-    featureDeadlineReminders,
     autoSaveEnabled,
     autoSaveInterval,
     compactMode,
     showKeyboardShortcuts,
     sessionTimeout,
     theme,
-    setEmailNotifications,
-    setPushNotifications,
-    setReleaseReminders,
-    setFeatureDeadlineReminders,
     setAutoSaveEnabled,
     setAutoSaveInterval,
     setCompactMode,
@@ -166,75 +158,7 @@ export default function SettingsPage() {
         </div>
 
         <div className="grid gap-6">
-          {/* Notifications */}
-          <Card className="app-card">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-app-text-primary">
-                <Bell className="h-5 w-5" />
-                Notifikasi
-              </CardTitle>
-              <CardDescription>
-                Kelola preferensi notifikasi dan pengingat
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-medium text-app-text-primary">Email Notifications</h4>
-                  <p className="text-sm text-app-text-secondary">Terima notifikasi melalui email</p>
-                </div>
-                <Switch 
-                  checked={emailNotifications} 
-                  onCheckedChange={(checked: boolean) => {
-                    setEmailNotifications(checked)
-                    toast.success(checked ? 'Email notifications diaktifkan' : 'Email notifications dinonaktifkan')
-                  }}
-                />
-              </div>
 
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-medium text-app-text-primary">Push Notifications</h4>
-                  <p className="text-sm text-app-text-secondary">Notifikasi push di browser</p>
-                </div>
-                <Switch 
-                  checked={pushNotifications} 
-                  onCheckedChange={(checked: boolean) => {
-                    setPushNotifications(checked)
-                    toast.success(checked ? 'Push notifications diaktifkan' : 'Push notifications dinonaktifkan')
-                  }}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-medium text-app-text-primary">Release Reminders</h4>
-                  <p className="text-sm text-app-text-secondary">Pengingat untuk release yang akan datang</p>
-                </div>
-                <Switch 
-                  checked={releaseReminders} 
-                  onCheckedChange={(checked: boolean) => {
-                    setReleaseReminders(checked)
-                    toast.success(checked ? 'Release reminders diaktifkan' : 'Release reminders dinonaktifkan')
-                  }}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-medium text-app-text-primary">Feature Deadline Reminders</h4>
-                  <p className="text-sm text-app-text-secondary">Pengingat untuk deadline fitur</p>
-                </div>
-                <Switch 
-                  checked={featureDeadlineReminders} 
-                  onCheckedChange={(checked: boolean) => {
-                    setFeatureDeadlineReminders(checked)
-                    toast.success(checked ? 'Feature deadline reminders diaktifkan' : 'Feature deadline reminders dinonaktifkan')
-                  }}
-                />
-              </div>
-            </CardContent>
-          </Card>
 
           {/* General Settings */}
           <Card className="app-card">
