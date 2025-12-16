@@ -1,20 +1,14 @@
 -- Migration: Increase project slots from 5 to 10
 -- Run this in Supabase SQL Editor to update existing constraints
 
--- Drop the existing check constraint
+-- Step 1: Drop the existing check constraint
 ALTER TABLE projects DROP CONSTRAINT IF EXISTS projects_slot_number_check;
 
--- Add new check constraint for 10 slots
+-- Step 2: Add new check constraint for 10 slots
 ALTER TABLE projects ADD CONSTRAINT projects_slot_number_check 
 CHECK (slot_number >= 1 AND slot_number <= 10);
 
--- Verify the constraint was updated
-SELECT conname, consrc 
-FROM pg_constraint 
-WHERE conrelid = 'projects'::regclass 
-AND conname = 'projects_slot_number_check';
--- Upda
-te the trigger function to allow 10 projects
+-- Step 3: Update the trigger function to allow 10 projects
 CREATE OR REPLACE FUNCTION check_project_limit()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -25,5 +19,14 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Verify the function was updated
-SELECT prosrc FROM pg_proc WHERE proname = 'check_project_limit';
+-- Step 4: Verify the changes (optional)
+-- Uncomment the lines below to verify the migration worked:
+
+-- SELECT conname, pg_get_constraintdef(oid) as definition
+-- FROM pg_constraint 
+-- WHERE conrelid = 'projects'::regclass 
+-- AND conname = 'projects_slot_number_check';
+
+-- SELECT proname, prosrc 
+-- FROM pg_proc 
+-- WHERE proname = 'check_project_limit';
