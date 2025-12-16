@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS projects (
   user_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
   name TEXT NOT NULL DEFAULT 'Untitled Project',
   description TEXT DEFAULT '',
-  slot_number INTEGER NOT NULL CHECK (slot_number >= 1 AND slot_number <= 5),
+  slot_number INTEGER NOT NULL CHECK (slot_number >= 1 AND slot_number <= 10),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   UNIQUE(user_id, slot_number)
@@ -254,8 +254,8 @@ CREATE TRIGGER on_auth_user_created
 CREATE OR REPLACE FUNCTION check_slot_limit()
 RETURNS TRIGGER AS $$
 BEGIN
-  IF (SELECT COUNT(*) FROM projects WHERE user_id = NEW.user_id) >= 5 THEN
-    RAISE EXCEPTION 'Maximum 5 project slots allowed per user';
+  IF (SELECT COUNT(*) FROM projects WHERE user_id = NEW.user_id) >= 10 THEN
+    RAISE EXCEPTION 'Maximum 10 project slots allowed per user';
   END IF;
   RETURN NEW;
 END;

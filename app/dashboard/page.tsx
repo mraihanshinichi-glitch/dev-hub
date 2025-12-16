@@ -70,7 +70,7 @@ export default function DashboardPage() {
     const usedSlots = projects.map(p => p.slot_number)
     const availableSlots = []
     
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 1; i <= 10; i++) {
       if (!usedSlots.includes(i)) {
         availableSlots.push(i)
       }
@@ -106,12 +106,12 @@ export default function DashboardPage() {
             Selamat datang kembali! 👋
           </h1>
           <p className="text-slate-600 dark:text-gray-400">
-            Kelola hingga 5 project sekaligus dengan sistem slot yang terorganisir
+            Kelola hingga 10 project sekaligus dengan sistem slot yang terorganisir
           </p>
         </div>
 
         {/* Project Slots Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
           {/* Existing Projects */}
           {projects.map((project) => (
             <ProjectSlot
@@ -154,7 +154,7 @@ export default function DashboardPage() {
             </h2>
             <p className="text-slate-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
               Mulai perjalanan development Anda dengan membuat project pertama. 
-              Anda bisa mengelola hingga 5 project sekaligus.
+              Anda bisa mengelola hingga 10 project sekaligus.
             </p>
             <Button onClick={() => setShowCreateDialog(true)} size="lg">
               <Plus className="h-5 w-5 mr-2" />
@@ -174,10 +174,10 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-slate-900 dark:text-white">
-                  {projects.length}/5
+                  {projects.length}/10
                 </div>
                 <p className="text-xs text-slate-400 dark:text-gray-500 mt-1">
-                  Slot tersedia: {5 - projects.length}
+                  Slot tersedia: {10 - projects.length}
                 </p>
               </CardContent>
             </Card>

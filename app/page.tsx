@@ -99,9 +99,9 @@ export default function HomePage() {
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
                 <Code2 className="h-6 w-6 text-primary" />
               </div>
-              <CardTitle className="text-white">5 Project Slots</CardTitle>
+              <CardTitle className="text-white">10 Project Slots</CardTitle>
               <CardDescription>
-                Kelola hingga 5 project sekaligus dengan sistem slot yang terorganisir
+                Kelola hingga 10 project sekaligus dengan sistem slot yang terorganisir
               </CardDescription>
             </CardHeader>
           </Card>

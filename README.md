@@ -8,8 +8,8 @@ DevHub adalah platform manajemen project khusus untuk developer solo dan indie h
 - Login dengan email & password
 - Sistem profil user dengan Supabase Auth
 
-### 📦 Sistem Slot Project (Maksimal 5)
-- Setiap user bisa membuat hingga 5 project slot
+### 📦 Sistem Slot Project (Maksimal 10)
+- Setiap user bisa membuat hingga 10 project slot
 - Setiap slot memiliki nama, deskripsi, dan metadata
 - Tampilan grid yang clean dan modern
 - Edit nama & deskripsi langsung
@@ -65,7 +65,7 @@ DevHub adalah platform manajemen project khusus untuk developer solo dan indie h
 
 ### Tables
 - `profiles` - User profiles
-- `projects` - Project slots (max 5 per user)
+- `projects` - Project slots (max 10 per user)
 - `notes` - Rich text notes per project
 - `features` - Features dengan status dan due date
 - `releases` - Release timeline
@@ -156,8 +156,8 @@ devhub/
 ## 🔧 Key Features Implementation
 
 ### 1. Slot System
-- Maksimal 5 project per user (enforced via database trigger)
-- Slot numbering 1-5 dengan unique constraint
+- Maksimal 10 project per user (enforced via database constraint)
+- Slot numbering 1-10 dengan unique constraint
 - Empty slot menampilkan "Create New Project" card
 
 ### 2. Auto-save Notes
@@ -188,7 +188,7 @@ devhub/
 
 ### Membuat Project Baru
 1. Klik "Create New Project" di slot kosong
-2. Pilih slot number (1-5)
+2. Pilih slot number (1-10)
 3. Isi nama dan deskripsi project
 4. Project siap digunakan dengan 4 tab
 
