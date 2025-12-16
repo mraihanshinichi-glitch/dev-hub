@@ -18,6 +18,7 @@ import { MoreVertical, Edit, Trash2, Calendar, ArrowRight, ArrowLeft } from 'luc
 import { toast } from 'sonner'
 import { EditFeatureDialog } from './edit-feature-dialog'
 import { DeleteFeatureDialog } from './delete-feature-dialog'
+import { useFeatureShortcuts } from '@/lib/hooks/use-keyboard-shortcuts'
 
 interface FeatureCardProps {
   feature: Feature
@@ -29,6 +30,7 @@ export function FeatureCard({ feature, onUpdate, onDelete }: FeatureCardProps) {
   const [showEditDialog, setShowEditDialog] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [isUpdating, setIsUpdating] = useState(false)
+  const [isFocused, setIsFocused] = useState(false)
   const supabase = createClient()
 
   const getNextStatus = (currentStatus: string) => {
@@ -85,9 +87,20 @@ export function FeatureCard({ feature, onUpdate, onDelete }: FeatureCardProps) {
 
   const isOverdue = feature.due_date && new Date(feature.due_date) < new Date() && feature.status !== 'done'
 
+  // Enable keyboard shortcuts when card is focused
+  useFeatureShortcuts(handleStatusChange, feature.status, isFocused)
+
   return (
     <>
-      <Card className="feature-card app-card hover:border-primary/30 transition-colors group">
+      <Card 
+        className={`feature-card app-card hover:border-primary/30 transition-colors group cursor-pointer ${
+          isFocused ? 'ring-2 ring-primary/50 border-primary/50' : ''
+        }`}
+        tabIndex={0}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        onClick={() => setIsFocused(true)}
+      >
         <CardContent className="p-4">
           <div className="flex items-start justify-between mb-3">
             <div className="flex-1 min-w-0">
@@ -170,6 +183,15 @@ export function FeatureCard({ feature, onUpdate, onDelete }: FeatureCardProps) {
               )}
             </div>
           </div>
+
+          {/* Keyboard Shortcuts Hint */}
+          {isFocused && (
+            <div className="flex items-center gap-2 text-xs text-app-text-muted mt-3 pt-3 border-t border-gray-800">
+              <span className="bg-gray-800 px-1.5 py-0.5 rounded text-xs">←→</span>
+              <span className="bg-gray-800 px-1.5 py-0.5 rounded text-xs">1-3</span>
+              <span>untuk ubah status</span>
+            </div>
+          )}
         </CardContent>
       </Card>
 

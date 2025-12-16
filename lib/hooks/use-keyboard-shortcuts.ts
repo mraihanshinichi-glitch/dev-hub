@@ -77,3 +77,49 @@ export function useReleaseShortcuts(
 
   useKeyboardShortcuts(shortcuts, enabled)
 }
+
+export function useFeatureShortcuts(
+  onStatusChange: (status: string) => void,
+  currentStatus: string,
+  enabled = true
+) {
+  const shortcuts: KeyboardShortcut[] = [
+    {
+      key: '1',
+      callback: () => onStatusChange('planned'),
+      description: 'Ubah ke Direncanakan'
+    },
+    {
+      key: '2', 
+      callback: () => onStatusChange('in-progress'),
+      description: 'Ubah ke Sedang Dikerjakan'
+    },
+    {
+      key: '3',
+      callback: () => onStatusChange('done'),
+      description: 'Ubah ke Selesai'
+    },
+    {
+      key: 'ArrowLeft',
+      callback: () => {
+        const statuses = ['planned', 'in-progress', 'done']
+        const currentIndex = statuses.indexOf(currentStatus)
+        const prevIndex = currentIndex > 0 ? currentIndex - 1 : statuses.length - 1
+        onStatusChange(statuses[prevIndex])
+      },
+      description: 'Status sebelumnya'
+    },
+    {
+      key: 'ArrowRight',
+      callback: () => {
+        const statuses = ['planned', 'in-progress', 'done']
+        const currentIndex = statuses.indexOf(currentStatus)
+        const nextIndex = currentIndex < statuses.length - 1 ? currentIndex + 1 : 0
+        onStatusChange(statuses[nextIndex])
+      },
+      description: 'Status selanjutnya'
+    }
+  ]
+
+  useKeyboardShortcuts(shortcuts, enabled)
+}
