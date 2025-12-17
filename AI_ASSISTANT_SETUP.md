@@ -17,18 +17,23 @@ DevHub sekarang dilengkapi dengan AI Assistant yang menggunakan OpenRouter dan m
 - Daftar akun gratis
 - Dapatkan API key dari dashboard
 
-### 2. Konfigurasi Environment
+### 2. Tambahkan Credits
+- Login ke dashboard OpenRouter
+- Buka [Settings → Credits](https://openrouter.ai/settings/credits)
+- Tambahkan credits (minimum $5, sangat murah untuk penggunaan personal)
+
+### 3. Konfigurasi Environment
 Tambahkan ke file `.env.local`:
 ```bash
 OPENROUTER_API_KEY=your_openrouter_api_key_here
 ```
 
-### 3. Restart Aplikasi
+### 4. Restart Aplikasi
 ```bash
 npm run dev
 ```
 
-### 4. Test Koneksi
+### 5. Test Koneksi
 - Buka Settings → AI Assistant
 - Klik "Test Koneksi" untuk memverifikasi
 
@@ -53,9 +58,9 @@ npm run dev
 ## Model AI
 
 - **Provider**: OpenRouter
-- **Model**: Google Gemma 2 27B IT (gratis)
-- **Rate Limit**: Sesuai kebijakan OpenRouter untuk akun gratis
-- **Cost**: Gratis untuk penggunaan wajar
+- **Model**: Various models available (requires credits)
+- **Rate Limit**: Sesuai kebijakan OpenRouter
+- **Cost**: Memerlukan credits OpenRouter (sangat murah, mulai dari $0.001 per request)
 
 ## Pengaturan
 

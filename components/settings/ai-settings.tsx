@@ -28,10 +28,10 @@ export function AISettings() {
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include', // Include cookies for authentication
+        credentials: 'include',
         body: JSON.stringify({
           message: 'Hello, test connection',
-          projectId: 'test',
+          projectId: 'test-project-id',
         }),
       })
 
@@ -40,7 +40,16 @@ export function AISettings() {
       } else {
         const error = await response.json()
         console.error('AI Test Error:', error)
-        toast.error(`Test gagal: ${error.error}`)
+        
+        if (response.status === 402) {
+          toast.error('OpenRouter memerlukan credits. Silakan tambahkan credits di dashboard OpenRouter.')
+        } else if (response.status === 401) {
+          toast.error('Silakan login terlebih dahulu untuk test AI Assistant.')
+        } else if (response.status === 404) {
+          toast.error('Project tidak ditemukan. Test ini memerlukan project yang valid.')
+        } else {
+          toast.error(`Test gagal: ${error.error}`)
+        }
       }
     } catch (error) {
       console.error('AI Test Error:', error)
@@ -57,7 +66,7 @@ export function AISettings() {
             AI Assistant
             <Badge variant="secondary" className="text-xs">
               <Sparkles className="h-3 w-3 mr-1" />
-              Gemma 2 27B
+              GPT-3.5 Turbo
             </Badge>
           </CardTitle>
           <CardDescription>
@@ -185,9 +194,9 @@ export function AISettings() {
               </ol>
             </div>
 
-            <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3">
-              <p className="text-sm text-green-200">
-                <strong>Model Gratis:</strong> Google Gemma 2 27B tersedia gratis di OpenRouter dengan rate limit yang wajar untuk penggunaan personal.
+            <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
+              <p className="text-sm text-yellow-200">
+                <strong>Catatan:</strong> OpenRouter memerlukan credits untuk menggunakan AI models. Daftar akun dan tambahkan credits di <a href="https://openrouter.ai/settings/credits" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">OpenRouter Credits</a>.
               </p>
             </div>
           </div>

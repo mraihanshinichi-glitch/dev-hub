@@ -135,7 +135,7 @@ Respond in Indonesian (Bahasa Indonesia) since this is an Indonesian application
 
     // Call OpenRouter API
     const completion = await openai.chat.completions.create({
-      model: 'google/gemma-2-27b-it:free',
+      model: 'google/gemma-3-27b-it:free', // Use a reliable model
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: message }
@@ -175,6 +175,20 @@ Respond in Indonesian (Bahasa Indonesia) since this is an Indonesian application
         return NextResponse.json(
           { error: 'Rate limit exceeded. Please try again later.' },
           { status: 429 }
+        )
+      }
+      
+      if (error.message.includes('insufficient_quota') || error.message.includes('Insufficient credits')) {
+        return NextResponse.json(
+          { error: 'OpenRouter account needs credits. Please add credits at https://openrouter.ai/settings/credits' },
+          { status: 402 }
+        )
+      }
+      
+      if (error.message.includes('No endpoints found')) {
+        return NextResponse.json(
+          { error: 'Model not available. Please check OpenRouter documentation.' },
+          { status: 404 }
         )
       }
     }

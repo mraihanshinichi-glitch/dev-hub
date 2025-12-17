@@ -154,7 +154,7 @@ export function AIAssistant({ project }: AIAssistantProps) {
             AI Assistant
             <Badge variant="secondary" className="text-xs">
               <Sparkles className="h-3 w-3 mr-1" />
-              Gemma 2 27B
+              GPT-3.5 Turbo
             </Badge>
           </CardTitle>
           <Button 
