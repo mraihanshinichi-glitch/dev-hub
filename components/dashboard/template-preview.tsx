@@ -66,7 +66,7 @@ export function TemplatePreview({ template }: TemplatePreviewProps) {
           </CardHeader>
           <CardContent>
             <ScrollArea className="h-32">
-              <div className="space-y-2">
+              <div className="space-y-2 pr-4">
                 {template.notes.map((note, index) => (
                   <div key={index} className="flex items-start gap-2 p-2 rounded border border-gray-800">
                     <FileText className="h-4 w-4 text-app-text-secondary mt-0.5 flex-shrink-0" />
@@ -100,7 +100,7 @@ export function TemplatePreview({ template }: TemplatePreviewProps) {
           </CardHeader>
           <CardContent>
             <ScrollArea className="h-40">
-              <div className="space-y-2">
+              <div className="space-y-2 pr-4">
                 {template.features.map((feature, index) => (
                   <div key={index} className="flex items-start gap-2 p-2 rounded border border-gray-800">
                     <div className="flex items-center gap-1 mt-0.5">
