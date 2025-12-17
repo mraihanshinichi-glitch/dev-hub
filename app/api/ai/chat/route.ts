@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
-import { createClient } from '@/lib/supabase/server'
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 
 // Initialize OpenAI client with OpenRouter only if API key is available
 let openai: OpenAI | null = null
@@ -31,31 +32,54 @@ export async function POST(request: NextRequest) {
     }
 
     // Get project context from Supabase
-    const supabase = createClient()
+    const cookieStore = cookies()
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          get(name: string) {
+            return cookieStore.get(name)?.value
+          },
+        },
+      }
+    )
     
-    // Get project details
+    // Check authentication
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
+      return NextResponse.json(
+        { error: 'Unauthorized. Please login to use AI Assistant.' },
+        { status: 401 }
+      )
+    }
+    
+    // Get project details (ensure user owns the project)
     const { data: project, error: projectError } = await supabase
       .from('projects')
       .select('*')
       .eq('id', projectId)
+      .eq('user_id', user.id)
       .single()
 
     if (projectError || !project) {
       return NextResponse.json(
-        { error: 'Project not found' },
+        { error: 'Project not found or access denied' },
         { status: 404 }
       )
     }
 
-    // Get project notes
+    // Get project notes (ensure user owns them)
     const { data: notes } = await supabase
       .from('notes')
       .select('title, category, content')
       .eq('project_id', projectId)
+      .eq('user_id', user.id)
       .order('created_at', { ascending: false })
       .limit(10)
 
-    // Get project features
+    // Get project features (ensure user owns them)
     const { data: features } = await supabase
       .from('features')
       .select('title, description, category, status, due_date')
@@ -63,7 +87,7 @@ export async function POST(request: NextRequest) {
       .order('created_at', { ascending: false })
       .limit(20)
 
-    // Get project releases
+    // Get project releases (ensure user owns them)
     const { data: releases } = await supabase
       .from('releases')
       .select('version, notes, category, status, target_date, released_at')
@@ -133,8 +157,30 @@ Respond in Indonesian (Bahasa Indonesia) since this is an Indonesian application
 
   } catch (error) {
     console.error('AI Chat Error:', error)
+    
+    // More specific error handling
+    if (error instanceof Error) {
+      console.error('Error message:', error.message)
+      console.error('Error stack:', error.stack)
+      
+      // Check if it's an OpenAI API error
+      if (error.message.includes('401') || error.message.includes('Unauthorized')) {
+        return NextResponse.json(
+          { error: 'Invalid OpenRouter API key' },
+          { status: 500 }
+        )
+      }
+      
+      if (error.message.includes('429') || error.message.includes('rate limit')) {
+        return NextResponse.json(
+          { error: 'Rate limit exceeded. Please try again later.' },
+          { status: 429 }
+        )
+      }
+    }
+    
     return NextResponse.json(
-      { error: 'Failed to process AI request' },
+      { error: 'Failed to process AI request. Please check server logs for details.' },
       { status: 500 }
     )
   }

@@ -28,6 +28,7 @@ export function AISettings() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Include cookies for authentication
         body: JSON.stringify({
           message: 'Hello, test connection',
           projectId: 'test',
@@ -38,9 +39,11 @@ export function AISettings() {
         toast.success('AI Assistant terhubung dengan baik!')
       } else {
         const error = await response.json()
+        console.error('AI Test Error:', error)
         toast.error(`Test gagal: ${error.error}`)
       }
     } catch (error) {
+      console.error('AI Test Error:', error)
       toast.error('Gagal menghubungi AI Assistant')
     }
   }

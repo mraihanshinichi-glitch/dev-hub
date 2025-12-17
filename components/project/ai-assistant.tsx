@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { Project } from '@/lib/types/database'
+import { createClient } from '@/lib/supabase/client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -63,6 +64,7 @@ export function AIAssistant({ project }: AIAssistantProps) {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Include cookies for authentication
         body: JSON.stringify({
           message: userMessage.content,
           projectId: project.id,
