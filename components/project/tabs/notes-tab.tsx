@@ -8,7 +8,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { useSettings } from '@/lib/hooks/use-settings'
 import { toast } from 'sonner'
 import { Plus, FileText, Clock, Edit, Trash2, Search } from 'lucide-react'
 import { formatDateTime } from '@/lib/utils'
@@ -20,6 +23,7 @@ interface NotesTabProps {
 
 export function NotesTab({ project }: NotesTabProps) {
   const { user } = useAuthStore()
+  const { noteCategories } = useSettings()
   const [notes, setNotes] = useState<Note[]>([])
   const [selectedNote, setSelectedNote] = useState<Note | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -27,6 +31,7 @@ export function NotesTab({ project }: NotesTabProps) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [noteToDelete, setNoteToDelete] = useState<Note | null>(null)
   const [newNoteTitle, setNewNoteTitle] = useState('')
+  const [newNoteCategory, setNewNoteCategory] = useState('general')
   const [searchQuery, setSearchQuery] = useState('')
   const [isCreating, setIsCreating] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -81,6 +86,7 @@ export function NotesTab({ project }: NotesTabProps) {
           project_id: project.id,
           user_id: user.id,
           title: newNoteTitle.trim(),
+          category: newNoteCategory,
           content: { type: 'doc', content: [{ type: 'paragraph' }] }
         })
         .select()
@@ -93,6 +99,7 @@ export function NotesTab({ project }: NotesTabProps) {
         setNotes(prev => [data, ...prev])
         setSelectedNote(data)
         setNewNoteTitle('')
+        setNewNoteCategory('general')
         setShowCreateDialog(false)
         toast.success('Note berhasil dibuat')
       }
@@ -215,10 +222,15 @@ export function NotesTab({ project }: NotesTabProps) {
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-app-text-primary truncate">
-                        {note.title}
-                      </h3>
-                      <div className="flex items-center gap-1 mt-1 text-xs text-app-text-muted">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-medium text-app-text-primary truncate">
+                          {note.title}
+                        </h3>
+                        <Badge variant="outline" className="text-xs">
+                          {note.category}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-1 text-xs text-app-text-muted">
                         <Clock className="h-3 w-3" />
                         <span>{formatDateTime(note.updated_at)}</span>
                       </div>
@@ -282,15 +294,33 @@ export function NotesTab({ project }: NotesTabProps) {
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium text-app-text-primary">
+              <Label className="text-sm font-medium text-app-text-primary">
                 Judul Note
-              </label>
+              </Label>
               <Input
                 placeholder="Masukkan judul note..."
                 value={newNoteTitle}
                 onChange={(e) => setNewNoteTitle(e.target.value)}
                 className="mt-1"
               />
+            </div>
+            
+            <div>
+              <Label className="text-sm font-medium text-app-text-primary">
+                Kategori
+              </Label>
+              <Select value={newNoteCategory} onValueChange={setNewNoteCategory}>
+                <SelectTrigger className="mt-1">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {noteCategories.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <DialogFooter>
@@ -299,6 +329,7 @@ export function NotesTab({ project }: NotesTabProps) {
               onClick={() => {
                 setShowCreateDialog(false)
                 setNewNoteTitle('')
+                setNewNoteCategory('general')
               }}
             >
               Batal

@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Project, Feature } from '@/lib/types/database'
+import { useSettings } from '@/lib/hooks/use-settings'
 import { toast } from 'sonner'
 
 interface CreateFeatureDialogProps {
@@ -37,8 +38,10 @@ export function CreateFeatureDialog({
   onOpenChange,
   onSuccess,
 }: CreateFeatureDialogProps) {
+  const { featureCategories } = useSettings()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
+  const [category, setCategory] = useState('feature')
   const [status, setStatus] = useState('planned')
   const [dueDate, setDueDate] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -74,6 +77,7 @@ export function CreateFeatureDialog({
           project_id: project.id,
           title: title.trim(),
           description: description.trim(),
+          category,
           status,
           due_date: dueDate || null,
           order_index: nextOrderIndex,
@@ -100,6 +104,7 @@ export function CreateFeatureDialog({
   const handleClose = () => {
     setTitle('')
     setDescription('')
+    setCategory('feature')
     setStatus('planned')
     setDueDate('')
     onOpenChange(false)
@@ -141,6 +146,22 @@ export function CreateFeatureDialog({
             <p className="text-xs text-gray-500">
               {description.length}/1000 karakter
             </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="category">Kategori</Label>
+            <Select value={category} onValueChange={setCategory}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {featureCategories.map((cat) => (
+                  <SelectItem key={cat} value={cat}>
+                    {cat}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="grid grid-cols-2 gap-4">

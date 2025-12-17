@@ -6,19 +6,23 @@ import { Project, Release } from '@/lib/types/database'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { ReleaseCard } from '@/components/project/release-card'
 import { CreateReleaseDialog } from '@/components/project/create-release-dialog'
+import { useSettings } from '@/lib/hooks/use-settings'
 import { toast } from 'sonner'
-import { Plus, Rocket, Calendar, Package, CheckCircle } from 'lucide-react'
+import { Plus, Rocket, Calendar, Package, CheckCircle, Filter } from 'lucide-react'
 
 interface ReleasesTabProps {
   project: Project
 }
 
 export function ReleasesTab({ project }: ReleasesTabProps) {
+  const { releaseCategories } = useSettings()
   const [releases, setReleases] = useState<Release[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [showCreateDialog, setShowCreateDialog] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const supabase = createClient()
 
   useEffect(() => {
@@ -62,16 +66,24 @@ export function ReleasesTab({ project }: ReleasesTabProps) {
     setReleases(prev => prev.filter(r => r.id !== releaseId))
   }
 
+  const getFilteredReleases = () => {
+    return selectedCategory === 'all' 
+      ? releases 
+      : releases.filter(r => r.category === selectedCategory)
+  }
+
   const getReleasesByStatus = (status: string) => {
-    return releases.filter(r => r.status === status)
+    const filtered = getFilteredReleases()
+    return filtered.filter(r => r.status === status)
   }
 
   const getStatusStats = () => {
-    const planned = releases.filter(r => r.status === 'planned').length
-    const upcoming = releases.filter(r => r.status === 'upcoming').length
-    const released = releases.filter(r => r.status === 'released').length
+    const filteredReleases = getFilteredReleases()
+    const planned = filteredReleases.filter(r => r.status === 'planned').length
+    const upcoming = filteredReleases.filter(r => r.status === 'upcoming').length
+    const released = filteredReleases.filter(r => r.status === 'released').length
     
-    return { planned, upcoming, released, total: releases.length }
+    return { planned, upcoming, released, total: filteredReleases.length }
   }
 
   const stats = getStatusStats()
@@ -104,10 +116,29 @@ export function ReleasesTab({ project }: ReleasesTabProps) {
           </div>
         </div>
 
-        <Button onClick={() => setShowCreateDialog(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          Tambah Release
-        </Button>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <Filter className="h-4 w-4 text-app-text-secondary" />
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-40">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Semua Kategori</SelectItem>
+                {releaseCategories.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <Button onClick={() => setShowCreateDialog(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            Tambah Release
+          </Button>
+        </div>
       </div>
 
       {/* Stats */}
@@ -161,24 +192,44 @@ export function ReleasesTab({ project }: ReleasesTabProps) {
         </Card>
       </div>
 
+      {/* Empty State for Filtered Category */}
+      {getFilteredReleases().length === 0 && releases.length > 0 && (
+        <Card className="bg-gray-900/30 border-gray-800 border-dashed">
+          <CardContent className="p-12 text-center">
+            <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Filter className="h-8 w-8 text-app-text-secondary" />
+            </div>
+            <h3 className="text-lg font-semibold text-app-text-primary mb-2">
+              Tidak ada release dengan kategori "{selectedCategory}"
+            </h3>
+            <p className="text-app-text-secondary mb-6 max-w-md mx-auto">
+              Coba pilih kategori lain atau tambah release baru dengan kategori ini.
+            </p>
+            <Button onClick={() => setSelectedCategory('all')} variant="outline">
+              Tampilkan Semua Kategori
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Releases Timeline */}
-      {releases.length > 0 ? (
+      {getFilteredReleases().length > 0 ? (
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-app-text-primary">Timeline Release</h3>
           
           <div className="space-y-4">
-            {releases.map((release, index) => (
+            {getFilteredReleases().map((release, index) => (
               <ReleaseCard
                 key={release.id}
                 release={release}
-                isLast={index === releases.length - 1}
+                isLast={index === getFilteredReleases().length - 1}
                 onUpdate={handleReleaseUpdated}
                 onDelete={handleReleaseDeleted}
               />
             ))}
           </div>
         </div>
-      ) : (
+      ) : releases.length === 0 ? (
         /* Empty State */
         <Card className="bg-gray-900/30 border-gray-800 border-dashed">
           <CardContent className="p-12 text-center">
@@ -198,10 +249,10 @@ export function ReleasesTab({ project }: ReleasesTabProps) {
             </Button>
           </CardContent>
         </Card>
-      )}
+      ) : null}
 
       {/* Progress Indicator */}
-      {releases.length > 0 && (
+      {getFilteredReleases().length > 0 && (
         <Card className="app-card">
           <CardContent className="p-4">
             <div className="flex items-center justify-between mb-2">

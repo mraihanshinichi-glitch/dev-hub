@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Release } from '@/lib/types/database'
+import { useSettings } from '@/lib/hooks/use-settings'
 import { toast } from 'sonner'
 
 interface EditReleaseDialogProps {
@@ -37,8 +38,10 @@ export function EditReleaseDialog({
   onOpenChange,
   onSuccess,
 }: EditReleaseDialogProps) {
+  const { releaseCategories } = useSettings()
   const [version, setVersion] = useState('')
   const [notes, setNotes] = useState('')
+  const [category, setCategory] = useState('major')
   const [status, setStatus] = useState('planned')
   const [targetDate, setTargetDate] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -49,6 +52,7 @@ export function EditReleaseDialog({
     if (open && release) {
       setVersion(release.version)
       setNotes(release.notes)
+      setCategory(release.category || 'major')
       setStatus(release.status)
       setTargetDate(release.target_date || '')
     }
@@ -68,6 +72,7 @@ export function EditReleaseDialog({
       const updateData: any = {
         version: version.trim(),
         notes: notes.trim(),
+        category,
         status,
         target_date: targetDate || null,
       }
@@ -140,6 +145,22 @@ export function EditReleaseDialog({
             <p className="text-xs text-gray-500">
               {notes.length}/1000 karakter
             </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="category">Kategori</Label>
+            <Select value={category} onValueChange={setCategory}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {releaseCategories.map((cat) => (
+                  <SelectItem key={cat} value={cat}>
+                    {cat}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="grid grid-cols-2 gap-4">

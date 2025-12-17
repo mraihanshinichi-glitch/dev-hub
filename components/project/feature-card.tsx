@@ -147,6 +147,12 @@ export function FeatureCard({ feature, onUpdate, onDelete }: FeatureCardProps) {
                 {getStatusLabel(feature.status)}
               </Badge>
               
+              {feature.category && (
+                <Badge variant="outline" className="text-xs">
+                  {feature.category}
+                </Badge>
+              )}
+              
               {feature.due_date && (
                 <div className={`flex items-center gap-1 text-xs ${
                   isOverdue ? 'text-red-400' : 'text-app-text-muted'

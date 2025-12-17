@@ -24,6 +24,9 @@ export function useSettings() {
       sessionTimeout: 60,
       autoBackupEnabled: false,
       backupFrequency: 'weekly' as const,
+      noteCategories: ['general', 'documentation', 'ideas', 'meeting'],
+      featureCategories: ['feature', 'bugfix', 'enhancement', 'refactor'],
+      releaseCategories: ['major', 'minor', 'patch', 'hotfix'],
     }
   }
 

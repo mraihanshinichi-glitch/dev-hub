@@ -6,10 +6,12 @@ import { Project, Feature } from '@/lib/types/database'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { FeatureCard } from '@/components/project/feature-card'
 import { CreateFeatureDialog } from '@/components/project/create-feature-dialog'
+import { useSettings } from '@/lib/hooks/use-settings'
 import { toast } from 'sonner'
-import { Plus, Zap, ListTodo, Clock, CheckCircle } from 'lucide-react'
+import { Plus, Zap, ListTodo, Clock, CheckCircle, Filter } from 'lucide-react'
 import { getStatusColor, getStatusLabel } from '@/lib/utils'
 
 interface FeaturesTabProps {
@@ -17,9 +19,11 @@ interface FeaturesTabProps {
 }
 
 export function FeaturesTab({ project }: FeaturesTabProps) {
+  const { featureCategories } = useSettings()
   const [features, setFeatures] = useState<Feature[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [showCreateDialog, setShowCreateDialog] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const supabase = createClient()
 
   useEffect(() => {
@@ -64,15 +68,25 @@ export function FeaturesTab({ project }: FeaturesTabProps) {
   }
 
   const getFeaturesByStatus = (status: string) => {
-    return features.filter(f => f.status === status)
+    const filtered = selectedCategory === 'all' 
+      ? features 
+      : features.filter(f => f.category === selectedCategory)
+    return filtered.filter(f => f.status === status)
+  }
+
+  const getFilteredFeatures = () => {
+    return selectedCategory === 'all' 
+      ? features 
+      : features.filter(f => f.category === selectedCategory)
   }
 
   const getStatusStats = () => {
-    const planned = features.filter(f => f.status === 'planned').length
-    const inProgress = features.filter(f => f.status === 'in-progress').length
-    const done = features.filter(f => f.status === 'done').length
+    const filteredFeatures = getFilteredFeatures()
+    const planned = filteredFeatures.filter(f => f.status === 'planned').length
+    const inProgress = filteredFeatures.filter(f => f.status === 'in-progress').length
+    const done = filteredFeatures.filter(f => f.status === 'done').length
     
-    return { planned, inProgress, done, total: features.length }
+    return { planned, inProgress, done, total: filteredFeatures.length }
   }
 
   const stats = getStatusStats()
@@ -105,10 +119,29 @@ export function FeaturesTab({ project }: FeaturesTabProps) {
           </div>
         </div>
 
-        <Button onClick={() => setShowCreateDialog(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          Tambah Fitur
-        </Button>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <Filter className="h-4 w-4 text-app-text-secondary" />
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-40">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Semua Kategori</SelectItem>
+                {featureCategories.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <Button onClick={() => setShowCreateDialog(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            Tambah Fitur
+          </Button>
+        </div>
       </div>
 
       {/* Stats */}
@@ -256,6 +289,25 @@ export function FeaturesTab({ project }: FeaturesTabProps) {
       </div>
 
       {/* Empty State */}
+      {getFilteredFeatures().length === 0 && features.length > 0 && (
+        <Card className="bg-gray-900/30 border-gray-800 border-dashed">
+          <CardContent className="p-12 text-center">
+            <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Filter className="h-8 w-8 text-app-text-secondary" />
+            </div>
+            <h3 className="text-lg font-semibold text-app-text-primary mb-2">
+              Tidak ada fitur dengan kategori "{selectedCategory}"
+            </h3>
+            <p className="text-app-text-secondary mb-6 max-w-md mx-auto">
+              Coba pilih kategori lain atau tambah fitur baru dengan kategori ini.
+            </p>
+            <Button onClick={() => setSelectedCategory('all')} variant="outline">
+              Tampilkan Semua Kategori
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
       {features.length === 0 && (
         <Card className="bg-gray-900/30 border-gray-800 border-dashed">
           <CardContent className="p-12 text-center">

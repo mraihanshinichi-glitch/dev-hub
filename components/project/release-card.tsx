@@ -153,6 +153,12 @@ export function ReleaseCard({ release, isLast, onUpdate, onDelete }: ReleaseCard
                       </div>
                     </Badge>
                     
+                    {release.category && (
+                      <Badge variant="outline" className="text-xs">
+                        {release.category}
+                      </Badge>
+                    )}
+                    
                     {/* Quick Status Change Buttons */}
                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       {release.status !== 'planned' && (

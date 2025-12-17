@@ -62,6 +62,7 @@ export interface Database {
           project_id: string
           user_id: string
           title: string
+          category: string
           content: any
           created_at: string
           updated_at: string
@@ -71,6 +72,7 @@ export interface Database {
           project_id: string
           user_id: string
           title?: string
+          category?: string
           content?: any
           created_at?: string
           updated_at?: string
@@ -91,6 +93,7 @@ export interface Database {
           project_id: string
           title: string
           description: string
+          category: string
           status: 'planned' | 'in-progress' | 'done'
           order_index: number
           due_date: string | null
@@ -102,6 +105,7 @@ export interface Database {
           project_id: string
           title: string
           description?: string
+          category?: string
           status?: 'planned' | 'in-progress' | 'done'
           order_index?: number
           due_date?: string | null
@@ -113,6 +117,7 @@ export interface Database {
           project_id?: string
           title?: string
           description?: string
+          category?: string
           status?: 'planned' | 'in-progress' | 'done'
           order_index?: number
           due_date?: string | null
@@ -126,6 +131,7 @@ export interface Database {
           project_id: string
           version: string
           target_date: string | null
+          category: string
           status: 'planned' | 'upcoming' | 'released'
           notes: string
           released_at: string | null
@@ -137,6 +143,7 @@ export interface Database {
           project_id: string
           version: string
           target_date?: string | null
+          category?: string
           status?: 'planned' | 'upcoming' | 'released'
           notes?: string
           released_at?: string | null
@@ -148,6 +155,7 @@ export interface Database {
           project_id?: string
           version?: string
           target_date?: string | null
+          category?: string
           status?: 'planned' | 'upcoming' | 'released'
           notes?: string
           released_at?: string | null

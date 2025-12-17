@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS notes (
   project_id UUID REFERENCES projects(id) ON DELETE CASCADE NOT NULL,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   title TEXT NOT NULL DEFAULT 'Untitled Note',
+  category TEXT DEFAULT 'general',
   content JSONB DEFAULT '{"type":"doc","content":[{"type":"paragraph"}]}',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -37,6 +38,7 @@ CREATE TABLE IF NOT EXISTS features (
   project_id UUID REFERENCES projects(id) ON DELETE CASCADE NOT NULL,
   title TEXT NOT NULL,
   description TEXT DEFAULT '',
+  category TEXT DEFAULT 'feature',
   status TEXT NOT NULL DEFAULT 'planned' CHECK (status IN ('planned', 'in-progress', 'done')),
   order_index INTEGER NOT NULL DEFAULT 0,
   due_date DATE,
@@ -50,6 +52,7 @@ CREATE TABLE IF NOT EXISTS releases (
   project_id UUID REFERENCES projects(id) ON DELETE CASCADE NOT NULL,
   version TEXT NOT NULL,
   target_date DATE,
+  category TEXT DEFAULT 'release',
   status TEXT NOT NULL DEFAULT 'planned' CHECK (status IN ('planned', 'upcoming', 'released')),
   notes TEXT DEFAULT '',
   released_at TIMESTAMP WITH TIME ZONE,
