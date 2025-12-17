@@ -10,6 +10,7 @@ import { DashboardHeader } from '@/components/dashboard/dashboard-header'
 import { TwoFactorSetup } from '@/components/settings/two-factor-setup'
 import { BackupSettings } from '@/components/settings/backup-settings'
 import { CategorySettings } from '@/components/settings/category-settings'
+import { AISettings } from '@/components/settings/ai-settings'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -363,6 +364,9 @@ export default function SettingsPage() {
 
           {/* Categories */}
           <CategorySettings />
+
+          {/* AI Assistant */}
+          <AISettings />
 
           {/* Backup & Data Management */}
           <BackupSettings />

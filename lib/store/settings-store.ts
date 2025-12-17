@@ -24,6 +24,10 @@ interface SettingsState {
   featureCategories: string[]
   releaseCategories: string[]
   
+  // AI Assistant settings
+  aiAssistantEnabled: boolean
+  showFloatingAIButton: boolean
+  
   // Actions
   setAutoSaveEnabled: (enabled: boolean) => void
   setAutoSaveInterval: (interval: number) => void
@@ -43,6 +47,8 @@ interface SettingsState {
   removeNoteCategory: (category: string) => void
   removeFeatureCategory: (category: string) => void
   removeReleaseCategory: (category: string) => void
+  setAIAssistantEnabled: (enabled: boolean) => void
+  setShowFloatingAIButton: (enabled: boolean) => void
   resetToDefaults: () => void
 }
 
@@ -59,6 +65,8 @@ const defaultSettings = {
   noteCategories: ['general', 'documentation', 'ideas', 'meeting'],
   featureCategories: ['feature', 'bugfix', 'enhancement', 'refactor'],
   releaseCategories: ['major', 'minor', 'patch', 'hotfix'],
+  aiAssistantEnabled: true,
+  showFloatingAIButton: true,
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -100,6 +108,10 @@ export const useSettingsStore = create<SettingsState>()(
       removeReleaseCategory: (category) => set((state) => ({
         releaseCategories: state.releaseCategories.filter(c => c !== category)
       })),
+      
+      // AI Assistant actions
+      setAIAssistantEnabled: (aiAssistantEnabled) => set({ aiAssistantEnabled }),
+      setShowFloatingAIButton: (showFloatingAIButton) => set({ showFloatingAIButton }),
       
       resetToDefaults: () => set(defaultSettings),
     }),

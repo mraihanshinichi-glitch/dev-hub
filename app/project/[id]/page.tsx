@@ -8,6 +8,7 @@ import { createClient } from '@/lib/supabase/client'
 import { DashboardHeader } from '@/components/dashboard/dashboard-header'
 import { ProjectHeader } from '@/components/project/project-header'
 import { ProjectTabs } from '@/components/project/project-tabs'
+import { FloatingAIButton } from '@/components/project/floating-ai-button'
 import { Project } from '@/lib/types/database'
 import { toast } from 'sonner'
 
@@ -89,6 +90,9 @@ export default function ProjectPage({ params }: ProjectPageProps) {
       <main className="container mx-auto px-4 py-6">
         <ProjectTabs project={currentProject} />
       </main>
+      
+      {/* Floating AI Assistant */}
+      <FloatingAIButton project={currentProject} />
     </div>
   )
 }
