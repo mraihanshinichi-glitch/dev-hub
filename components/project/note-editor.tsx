@@ -6,13 +6,15 @@ import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
 import { createClient } from '@/lib/supabase/client'
 import { useSettingsStore } from '@/lib/store/settings-store'
+import { useSettings } from '@/lib/hooks/use-settings'
 import { Note } from '@/lib/types/database'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
-import { Save, FileText, Clock, Edit2 } from 'lucide-react'
+import { Save, FileText, Clock, Edit2, Tag } from 'lucide-react'
 import { formatDateTime } from '@/lib/utils'
 
 interface NoteEditorProps {
@@ -22,10 +24,13 @@ interface NoteEditorProps {
 
 export function NoteEditor({ note, onUpdate }: NoteEditorProps) {
   const { autoSaveEnabled, autoSaveInterval } = useSettingsStore()
+  const { noteCategories } = useSettings()
   const [isSaving, setIsSaving] = useState(false)
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
   const [isEditingTitle, setIsEditingTitle] = useState(false)
+  const [isEditingCategory, setIsEditingCategory] = useState(false)
   const [title, setTitle] = useState(note.title)
+  const [category, setCategory] = useState(note.category || 'general')
   const supabase = createClient()
 
   const editor = useEditor({
@@ -52,7 +57,9 @@ export function NoteEditor({ note, onUpdate }: NoteEditorProps) {
       setHasUnsavedChanges(false)
     }
     setTitle(note.title)
+    setCategory(note.category || 'general')
     setIsEditingTitle(false)
+    setIsEditingCategory(false)
   }, [note, editor])
 
   useEffect(() => {
@@ -78,6 +85,7 @@ export function NoteEditor({ note, onUpdate }: NoteEditorProps) {
         .update({ 
           content,
           title: title.trim() || 'Untitled Note',
+          category,
           updated_at: new Date().toISOString()
         })
         .eq('id', note.id)
@@ -132,6 +140,38 @@ export function NoteEditor({ note, onUpdate }: NoteEditorProps) {
     }
   }
 
+  const handleCategorySave = async (newCategory: string) => {
+    if (newCategory === note.category) {
+      setIsEditingCategory(false)
+      return
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('notes')
+        .update({ 
+          category: newCategory,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', note.id)
+        .select()
+        .single()
+
+      if (error) {
+        toast.error('Gagal mengubah kategori')
+        setCategory(note.category || 'general') // Reset to original category
+      } else {
+        onUpdate(data)
+        toast.success('Kategori berhasil diubah')
+      }
+    } catch (error) {
+      toast.error('Terjadi kesalahan saat mengubah kategori')
+      setCategory(note.category || 'general') // Reset to original category
+    } finally {
+      setIsEditingCategory(false)
+    }
+  }
+
   const handleManualSave = () => {
     if (hasUnsavedChanges) {
       handleSave()
@@ -177,9 +217,43 @@ export function NoteEditor({ note, onUpdate }: NoteEditorProps) {
                 </Button>
               </div>
             )}
-            <div className="flex items-center gap-1 text-xs text-app-text-muted">
-              <Clock className="h-3 w-3" />
-              <span>Terakhir diupdate {formatDateTime(note.updated_at)}</span>
+            <div className="flex items-center gap-3 text-xs text-app-text-muted">
+              <div className="flex items-center gap-1">
+                <Clock className="h-3 w-3" />
+                <span>Terakhir diupdate {formatDateTime(note.updated_at)}</span>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <Tag className="h-3 w-3" />
+                {isEditingCategory ? (
+                  <Select 
+                    value={category} 
+                    onValueChange={(value) => {
+                      setCategory(value)
+                      handleCategorySave(value)
+                    }}
+                  >
+                    <SelectTrigger className="h-6 w-32 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {noteCategories.map((cat) => (
+                        <SelectItem key={cat} value={cat}>
+                          {cat}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <Badge 
+                    variant="outline" 
+                    className="text-xs cursor-pointer hover:bg-primary/10"
+                    onClick={() => setIsEditingCategory(true)}
+                  >
+                    {note.category || 'general'}
+                  </Badge>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -231,6 +305,7 @@ export function NoteEditor({ note, onUpdate }: NoteEditorProps) {
               <h4 className="font-medium text-blue-300 mb-1">Tips Menulis Notes</h4>
               <ul className="text-sm text-blue-200 space-y-1">
                 <li>• Klik judul untuk mengedit nama note</li>
+                <li>• Klik badge kategori untuk mengubah kategori</li>
                 <li>• Gunakan heading untuk mengorganisir konten</li>
                 <li>• Note tersimpan otomatis setiap {autoSaveInterval} detik {!autoSaveEnabled && '(dinonaktifkan)'}</li>
                 <li>• Gunakan format Markdown untuk styling</li>

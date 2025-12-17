@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useSettings } from '@/lib/hooks/use-settings'
 import { toast } from 'sonner'
-import { Plus, FileText, Clock, Edit, Trash2, Search } from 'lucide-react'
+import { Plus, FileText, Clock, Edit, Trash2, Search, Filter } from 'lucide-react'
 import { formatDateTime } from '@/lib/utils'
 import { NoteEditor } from '../note-editor'
 
@@ -33,6 +33,7 @@ export function NotesTab({ project }: NotesTabProps) {
   const [newNoteTitle, setNewNoteTitle] = useState('')
   const [newNoteCategory, setNewNoteCategory] = useState('general')
   const [searchQuery, setSearchQuery] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [isCreating, setIsCreating] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const supabase = createClient()
@@ -41,9 +42,11 @@ export function NotesTab({ project }: NotesTabProps) {
     loadNotes()
   }, [project.id])
 
-  const filteredNotes = notes.filter(note =>
-    note.title.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const filteredNotes = notes.filter(note => {
+    const matchesSearch = note.title.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesCategory = selectedCategory === 'all' || note.category === selectedCategory
+    return matchesSearch && matchesCategory
+  })
 
   const loadNotes = async () => {
     if (!user) return
@@ -168,7 +171,7 @@ export function NotesTab({ project }: NotesTabProps) {
           <div>
             <h2 className="text-lg font-semibold text-app-text-primary">Notes</h2>
             <p className="text-sm text-app-text-secondary">
-              {notes.length} note{notes.length !== 1 ? 's' : ''}
+              {filteredNotes.length} dari {notes.length} note{notes.length !== 1 ? 's' : ''}
             </p>
           </div>
           <Button onClick={() => setShowCreateDialog(true)} size="sm">
@@ -177,15 +180,34 @@ export function NotesTab({ project }: NotesTabProps) {
           </Button>
         </div>
 
-        {/* Search */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-app-text-muted" />
-          <Input
-            placeholder="Cari notes..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
+        {/* Search & Filter */}
+        <div className="space-y-3">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-app-text-muted" />
+            <Input
+              placeholder="Cari notes..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <Filter className="h-4 w-4 text-app-text-secondary" />
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Semua Kategori</SelectItem>
+                {noteCategories.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         {/* Notes List */}
@@ -195,7 +217,9 @@ export function NotesTab({ project }: NotesTabProps) {
               <CardContent className="p-6 text-center">
                 <FileText className="h-12 w-12 text-app-text-muted mx-auto mb-3" />
                 <p className="text-app-text-secondary">
-                  {notes.length === 0 ? 'Belum ada notes' : 'Tidak ada notes yang cocok'}
+                  {notes.length === 0 ? 'Belum ada notes' : 
+                   selectedCategory !== 'all' ? `Tidak ada notes dengan kategori "${selectedCategory}"` :
+                   'Tidak ada notes yang cocok dengan pencarian'}
                 </p>
                 {notes.length === 0 && (
                   <Button 
@@ -214,7 +238,7 @@ export function NotesTab({ project }: NotesTabProps) {
             filteredNotes.map((note) => (
               <Card 
                 key={note.id} 
-                className={`note-item app-card cursor-pointer transition-colors ${
+                className={`note-item app-card cursor-pointer transition-colors group ${
                   selectedNote?.id === note.id ? 'ring-2 ring-primary' : ''
                 }`}
                 onClick={() => setSelectedNote(note)}
