@@ -154,7 +154,7 @@ export function AIAssistant({ project }: AIAssistantProps) {
             AI Assistant
             <Badge variant="secondary" className="text-xs">
               <Sparkles className="h-3 w-3 mr-1" />
-              GPT-3.5 Turbo
+              Gemma 3 27B
             </Badge>
           </CardTitle>
           <Button 
@@ -175,7 +175,7 @@ export function AIAssistant({ project }: AIAssistantProps) {
               <div className="text-center py-8">
                 <Bot className="h-12 w-12 text-app-text-muted mx-auto mb-3" />
                 <p className="text-app-text-secondary mb-4">
-                  Halo! Saya AI Assistant untuk project <strong>{project.name}</strong>
+                  Halo! Saya adalah AI Assistant untuk project <strong>{project.name}</strong>
                 </p>
                 <p className="text-sm text-app-text-muted mb-4">
                   Saya sudah memahami project Anda termasuk notes, features, dan releases. 

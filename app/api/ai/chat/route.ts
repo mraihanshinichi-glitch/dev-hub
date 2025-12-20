@@ -102,6 +102,9 @@ Project Information:
 - Description: ${project.description || 'No description provided'}
 - Status: ${project.status}
 - Created: ${new Date(project.created_at).toLocaleDateString()}
+- Notes: ${project.notes}
+- Features: ${project.features}
+- Releases: ${project.releases}
 
 Recent Notes (${notes?.length || 0} total):
 ${notes?.map(note => `- ${note.title} (${note.category})`).join('\n') || 'No notes yet'}
@@ -117,7 +120,7 @@ ${releases?.map(release =>
 ).join('\n') || 'No releases yet'}
 `
 
-    const systemPrompt = `You are DevHub AI Assistant, a helpful AI that assists developers with their projects. You have access to the current project's information including notes, features, and releases.
+    const systemPrompt = `You are DevHub AI Assistant, a helpful AI that assists developers with their projects. You may have access to the current project's information including notes, features, and releases.
 
 Your role is to:
 1. Help brainstorm new features and improvements
@@ -141,7 +144,7 @@ Respond in Indonesian (Bahasa Indonesia) since this is an Indonesian application
         { role: 'user', content: message }
       ],
       max_tokens: 1000,
-      temperature: 0.7,
+      temperature: 1,
     })
 
     const aiResponse = completion.choices[0]?.message?.content
